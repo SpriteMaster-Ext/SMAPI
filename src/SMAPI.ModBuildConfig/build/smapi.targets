@@ -9,7 +9,7 @@
   **********************************************-->
   <PropertyGroup>
     <!-- include PDB file by default to enable line numbers in stack traces -->
-    <DebugType>pdbonly</DebugType>
+    <!--<DebugType>pdbonly</DebugType>-->
     <DebugSymbols>true</DebugSymbols>
 
     <!-- don't create the 'refs' folder (which isn't useful for mods) -->
@@ -72,7 +72,7 @@
     <Error Condition="!Exists('$(GamePath)\StardewModdingAPI.dll')" Text="The mod build package found a game folder at $(GamePath), but it doesn't contain SMAPI. You need to install SMAPI before building the mod." ContinueOnError="false" />
 
     <!-- invalid target architecture (note: internal value is 'AnyCPU', value shown in Visual Studio is 'Any CPU') -->
-    <Warning Condition="'$(Platform)' != 'AnyCPU'" Text="The target platform should be set to 'Any CPU' for compatibility with both 32-bit and 64-bit versions of Stardew Valley (currently set to '$(Platform)'). See https://smapi.io/package/wrong-processor-architecture for details." HelpLink="https://smapi.io/package/wrong-processor-architecture" />
+    <!--<Warning Condition="'$(Platform)' != 'AnyCPU'" Text="The target platform should be set to 'Any CPU' for compatibility with both 32-bit and 64-bit versions of Stardew Valley (currently set to '$(Platform)'). See https://smapi.io/package/wrong-processor-architecture for details." HelpLink="https://smapi.io/package/wrong-processor-architecture" />-->
   </Target>
 
 

@@ -10,7 +10,7 @@
     <!--NuGet package-->
     <PackageId>Pathoschild.Stardew.ModBuildConfig</PackageId>
     <Title>Build package for SMAPI mods</Title>
-    <Version>4.0.1</Version>
+    <Version>4.0.1-sm</Version>
     <Authors>Pathoschild</Authors>
     <Description>Automates the build configuration for crossplatform Stardew Valley SMAPI mods. For SMAPI 3.13.0 or later.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.10" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 
     <!--
@@ -42,7 +42,7 @@
     <None Include="..\..\docs\technical\mod-package.md" Link="mod-package.md" />
 
     <!--NuGet package files-->
-    <None PackagePath="analyzers/dotnet/cs" Include="$(SolutionDir)/SMAPI.ModBuildConfig.Analyzer/bin/netstandard2.0/SMAPI.ModBuildConfig.Analyzer.dll" Pack="true" Visible="false" />
+    <None PackagePath="analyzers/dotnet/cs" Include="$(ProjectDir)../SMAPI.ModBuildConfig.Analyzer/bin/netstandard2.0/SMAPI.ModBuildConfig.Analyzer.dll" Pack="true" Visible="false" />
     <None PackagePath="build/" Include="..\..\build\find-game-folder.targets" Link="build/find-game-folder.targets" Pack="true" />
     <None PackagePath="build/" Include="$(OutputPath)\Newtonsoft.Json.dll" Pack="true" Visible="false" />
     <None PackagePath="build/" Include="$(OutputPath)\SMAPI.Toolkit.dll" Pack="true" Visible="false" />
