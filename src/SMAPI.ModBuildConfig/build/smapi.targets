@@ -45,9 +45,9 @@
   **********************************************-->
   <ItemGroup>
     <!-- game -->
+    <Reference Include="MonoGame.Framework" HintPath="$(GamePath)\MonoGame.Framework.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
     <Reference Include="Stardew Valley" HintPath="$(GamePath)\Stardew Valley.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
     <Reference Include="StardewValley.GameData" HintPath="$(GamePath)\StardewValley.GameData.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
-    <Reference Include="MonoGame.Framework" HintPath="$(GamePath)\MonoGame.Framework.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
     <Reference Include="xTile" HintPath="$(GamePath)\xTile.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
 
     <!-- SMAPI -->
