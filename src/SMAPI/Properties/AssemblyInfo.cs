@@ -1,3 +1,5 @@
+global using StardewModdingAPI.Toolkit.Extensions;
+
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("SMAPI.Tests")]
