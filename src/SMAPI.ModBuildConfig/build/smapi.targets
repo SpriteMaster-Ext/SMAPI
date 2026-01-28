@@ -8,9 +8,9 @@
   ** Set build options
   **********************************************-->
   <PropertyGroup>
-    <!-- include PDB file by default to enable line numbers in stack traces -->
-    <!--<DebugType>pdbonly</DebugType>-->
+    <!-- enable line numbers in stack traces (needs to embedded for Linux/macOS: https://github.com/dotnet/runtime/issues/39987) -->
     <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
 
     <!-- don't create the 'refs' folder (which isn't useful for mods) -->
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
@@ -28,8 +28,12 @@
     <EnableGameDebugging Condition="'$(EnableGameDebugging)' == ''">true</EnableGameDebugging>
     <BundleExtraAssemblies Condition="'$(BundleExtraAssemblies)' == ''"></BundleExtraAssemblies>
 
+    <!-- simplify conditions -->
+    <_BundleExtraAssembliesForGame>$([System.Text.RegularExpressions.Regex]::IsMatch('$(BundleExtraAssemblies)', '\bGame|All\b', RegexOptions.IgnoreCase))</_BundleExtraAssembliesForGame>
+    <_BundleExtraAssembliesForAny>$([System.Text.RegularExpressions.Regex]::IsMatch('$(BundleExtraAssemblies)', '\bGame|System|ThirdParty|All\b', RegexOptions.IgnoreCase))</_BundleExtraAssembliesForAny>
+
     <!-- coppy referenced DLLs into build output -->
-    <CopyLocalLockFileAssemblies Condition="$(BundleExtraAssemblies.Contains('ThirdParty')) OR $(BundleExtraAssemblies.Contains('Game')) OR $(BundleExtraAssemblies.Contains('System')) OR $(BundleExtraAssemblies.Contains('All'))">true</CopyLocalLockFileAssemblies>
+    <CopyLocalLockFileAssemblies Condition="$(_BundleExtraAssembliesForAny)">true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT' AND '$(EnableGameDebugging)' == 'true'">
@@ -45,17 +49,17 @@
   **********************************************-->
   <ItemGroup>
     <!-- game -->
-    <Reference Include="MonoGame.Framework" HintPath="$(GamePath)\MonoGame.Framework.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
-    <Reference Include="Stardew Valley" HintPath="$(GamePath)\Stardew Valley.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
-    <Reference Include="StardewValley.GameData" HintPath="$(GamePath)\StardewValley.GameData.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
-    <Reference Include="xTile" HintPath="$(GamePath)\xTile.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
+    <Reference Include="Stardew Valley" HintPath="$(GamePath)\Stardew Valley.dll" Private="$(_BundleExtraAssembliesForGame)" />
+    <Reference Include="StardewValley.GameData" HintPath="$(GamePath)\StardewValley.GameData.dll" Private="$(_BundleExtraAssembliesForGame)" />
+    <Reference Include="MonoGame.Framework" HintPath="$(GamePath)\MonoGame.Framework.dll" Private="$(_BundleExtraAssembliesForGame)" />
+    <Reference Include="xTile" HintPath="$(GamePath)\xTile.dll" Private="$(_BundleExtraAssembliesForGame)" />
 
     <!-- SMAPI -->
-    <Reference Include="StardewModdingAPI" HintPath="$(GamePath)\StardewModdingAPI.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
-    <Reference Include="SMAPI.Toolkit.CoreInterfaces" HintPath="$(GamePath)\smapi-internal\SMAPI.Toolkit.CoreInterfaces.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
+    <Reference Include="StardewModdingAPI" HintPath="$(GamePath)\StardewModdingAPI.dll" Private="$(_BundleExtraAssembliesForGame)" />
+    <Reference Include="SMAPI.Toolkit.CoreInterfaces" HintPath="$(GamePath)\smapi-internal\SMAPI.Toolkit.CoreInterfaces.dll" Private="$(_BundleExtraAssembliesForGame)" />
 
     <!-- Harmony -->
-    <Reference Include="0Harmony" Condition="'$(EnableHarmony)' == 'true'" HintPath="$(GamePath)\smapi-internal\0Harmony.dll" Private="$(BundleExtraAssemblies.Contains('Game'))" />
+    <Reference Include="0Harmony" Condition="'$(EnableHarmony)' == 'true'" HintPath="$(GamePath)\smapi-internal\0Harmony.dll" Private="$(_BundleExtraAssembliesForGame)" />
   </ItemGroup>
 
 
@@ -84,6 +88,7 @@
       ModDllName="$(TargetName)"
       ModFolderName="$(ModFolderName)"
       ModZipPath="$(ModZipPath)"
+      ProjectVersion="$(Version)"
 
       EnableModDeploy="$(EnableModDeploy)"
       EnableModZip="$(EnableModZip)"
@@ -95,6 +100,7 @@
       IgnoreModFilePaths="$(IgnoreModFilePaths)"
 
       BundleExtraAssemblies="$(BundleExtraAssemblies)"
+      ContentPacks="@(ContentPacks)"
     />
   </Target>
 </Project>

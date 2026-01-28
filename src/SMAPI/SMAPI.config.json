@@ -2,21 +2,21 @@
 
 
 
-This file contains advanced configuration for SMAPI. You generally shouldn't change this file.
-The default values are mirrored in StardewModdingAPI.Framework.Models.SConfig to log custom changes.
+This file has advanced configuration for SMAPI.
 
+Don't edit this file directly! It will be reset each time you update or reinstall SMAPI.
 
-This file is overwritten each time you update or reinstall SMAPI. To avoid losing custom settings,
-create a 'config.user.json' file in the same folder with *only* the settings you want to change.
-That file won't be overwritten, and any settings in it will override the default options. Don't
-copy all the settings, or you may cause bugs due to overridden changes in future SMAPI versions.
+Instead create a `smapi-internal/config.user.json` or `Mods/SMAPI-config.json` file with *only* the
+settings you want to change. That file won't be overwritten, and any settings in it will override
+the default options. Don't copy all the settings, or you may cause bugs due to overridden changes
+in future SMAPI versions.
 
 
 
 */
 {
     /**
-     * The logs for which to enable verbose logging, which may show a lot more information to
+     * The mods for which to enable verbose logging, which may show a lot more information to
      * simplify troubleshooting.
      *
      * The possible values are:
@@ -36,16 +36,40 @@ copy all the settings, or you may cause bugs due to overridden changes in future
     "CheckForUpdates": true,
 
     /**
-     * Whether to enable features intended for mod developers. Currently this only makes TRACE-level
-     * messages appear in the console.
+     * Whether SMAPI should check whether the content files are present and unmodified. This should
+     * nearly always be enabled.
+     *
+     * If disabled, SMAPI will log a warning that it's disabled for visibility when someone helps
+     * you troubleshoot game issues.
      */
-    "DeveloperMode": true,
+    "CheckContentIntegrity": true,
 
     /**
-     * Whether SMAPI should rewrite mods for compatibility. This may prevent older mods from
-     * loading, but bypasses a Visual Studio crash when debugging.
+     * Whether to show much more info in the SMAPI consoler window, intended for mod developers.
+     *
+     * Not recommended for most players.
+     */
+    "DeveloperMode": false,
+
+    /**
+     * Whether SMAPI should listen for console input. Disabling this will prevent you from using
+     * console commands. On some specific Linux systems, disabling this may reduce CPU usage.
+     */
+    "ListenForConsoleInput": true,
+
+    /**
+     * Whether SMAPI should rewrite mods for compatibility.
+     *
+     * Disabling this may prevent older mods from loading.
      */
     "RewriteMods": true,
+
+    /**
+     * Whether to fix the library mods use to patch game code, so it works with Stardew Valley.
+     *
+     * If you disable this, mods which use Harmony are likely to cause game crashes.
+     */
+    "FixHarmony": true,
 
     /**
      * Whether to make SMAPI file APIs case-insensitive (even if the filesystem is case-sensitive).
@@ -53,18 +77,6 @@ copy all the settings, or you may cause bugs due to overridden changes in future
      * If null, it's only enabled on Android and Linux.
      */
     "UseCaseInsensitivePaths": null,
-
-    /**
-     * Whether to use the experimental Pintail API proxying library, instead of the original
-     * proxying built into SMAPI itself.
-     */
-    "UsePintail": true,
-
-    /**
-     * Whether to use raw image data when possible, instead of initializing an XNA Texture2D
-     * instance through the GPU.
-     */
-    "UseRawImageLoading": true,
 
     /**
      * Whether to add a section to the 'mod issues' list for mods which directly use potentially
@@ -94,56 +106,89 @@ copy all the settings, or you may cause bugs due to overridden changes in future
     "WebApiBaseUrl": "https://smapi.io/api/",
 
     /**
+     * The URL for the 'malicious mods' blacklist on the SMAPI web server.
+     */
+    "BlacklistUrl": "https://smapi.io/SMAPI.blacklist.json",
+
+    /**
      * Whether SMAPI should log network traffic (may be very verbose). Best combined with VerboseLogging, which includes network metadata.
      */
     "LogNetworkTraffic": false,
 
     /**
-     * The colors to use for text written to the SMAPI console.
+     * Whether to include more technical details about broken mods in the TRACE logs. This is
+     * mainly useful for creating compatibility rewriters, it's not useful to most players or mod
+     * authors.
+     */
+    "LogTechnicalDetailsForBrokenMods": false,
+
+    /**
+     * The color scheme to apply.
      *
-     * The possible values for 'UseScheme' are:
+     * The possible values are:
      *  - AutoDetect: SMAPI will assume a light background on macOS, and detect the background color
      *    automatically on Linux or Windows.
      *  - LightBackground: use darker text colors that look better on a white or light background.
      *  - DarkBackground: use lighter text colors that look better on a black or dark background.
      *  - None: disables all colors, so everything is written in the default terminal color.
+    */
+    "ConsoleColorScheme": "AutoDetect",
+
+    /**
+     * The colors to use for text written to the SMAPI console.
      *
-     * For available color codes, see https://docs.microsoft.com/en-us/dotnet/api/system.consolecolor.
+     * Only built-scheme IDs can be set here. For available color codes, see
+     * https://docs.microsoft.com/en-us/dotnet/api/system.consolecolor.
      *
      * (These values are synched with ColorfulConsoleWriter.GetDefaultColorSchemeConfig in the
      * SMAPI code.)
      */
-    "ConsoleColors": {
-        "UseScheme": "AutoDetect",
-
-        "Schemes": {
-            "DarkBackground": {
-                "Trace": "DarkGray",
-                "Debug": "DarkGray",
-                "Info": "White",
-                "Warn": "Yellow",
-                "Error": "Red",
-                "Alert": "Magenta",
-                "Success": "DarkGreen"
-            },
-            "LightBackground": {
-                "Trace": "DarkGray",
-                "Debug": "DarkGray",
-                "Info": "Black",
-                "Warn": "DarkYellow",
-                "Error": "Red",
-                "Alert": "DarkMagenta",
-                "Success": "DarkGreen"
-            }
+    "ConsoleColorSchemes": {
+        "DarkBackground": {
+            "Trace": "DarkGray",
+            "Debug": "DarkGray",
+            "Info": "White",
+            "Warn": "Yellow",
+            "Error": "Red",
+            "Alert": "Magenta",
+            "Success": "DarkGreen"
+        },
+        "LightBackground": {
+            "Trace": "DarkGray",
+            "Debug": "DarkGray",
+            "Info": "Black",
+            "Warn": "DarkYellow",
+            "Error": "Red",
+            "Alert": "DarkMagenta",
+            "Success": "DarkGreen"
         }
     },
+
+    /**
+     * Whether to prevent mods from enabling Harmony's debug mode, which impacts performance and
+     * creates a file on your desktop. Debug mode should never be enabled by a released mod.
+     *
+     * If you actually need debug mode to test your own mod, set this to false.
+     */
+    "SuppressHarmonyDebugMode": true,
 
     /**
      * The mod IDs SMAPI should ignore when performing update checks or validating update keys.
      */
     "SuppressUpdateChecks": [
         "SMAPI.ConsoleCommands",
-        "SMAPI.ErrorHandler",
         "SMAPI.SaveBackup"
-    ]
+    ],
+
+    /**
+     * The mod IDs SMAPI should load before any other mods (except those needed to load them)
+     * or after any other mods.
+     *
+     * This lets you manually fix the load order if needed, but this is a last resort — SMAPI
+     * automatically adjusts the load order based on mods' dependencies, so needing to manually
+     * edit the order is usually a problem with one or both mods' metadata that can be reported to
+     * the mod author.
+     */
+    "ModsToLoadEarly": [],
+    "ModsToLoadLate": []
 }
